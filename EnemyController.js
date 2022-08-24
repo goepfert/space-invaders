@@ -1,7 +1,7 @@
 import { createEnemy } from './Enemy.js';
 import MovingDirection from './MovingDirection.js';
 
-const createEnemyController = (canvas) => {
+const createEnemyController = (canvas, enemyBulletController, playerBulletController) => {
   const enemyMap = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -20,9 +20,42 @@ const createEnemyController = (canvas) => {
   const moveDownTimerDefault = 200;
   let moveDownTimer = moveDownTimerDefault;
 
+  const fireBulletTimerDefault = 100;
+  let fireBulletTimer = fireBulletTimerDefault;
+
+  const enemyDeathSound = new Audio('sounds/enemy-death.wav');
+  enemyDeathSound.volume = 0.1;
+
   function draw(ctx) {
     updateVelocityAndDirection();
+    collisionDetection();
     drawEnemies(ctx);
+    fireBullet();
+  }
+
+  function collisionDetection() {
+    enemyRows.forEach((enemyRow) => {
+      enemyRow.forEach((enemy, enemyIndex) => {
+        if (playerBulletController.collideWith(enemy)) {
+          enemyDeathSound.currentTime = 0;
+          enemyDeathSound.play();
+          enemyRow.splice(enemyIndex, 1);
+        }
+      });
+    });
+
+    enemyRows = enemyRows.filter((enemyRow) => enemyRow.length > 0);
+  }
+
+  function fireBullet() {
+    fireBulletTimer--;
+    if (fireBulletTimer <= 0) {
+      fireBulletTimer = fireBulletTimerDefault;
+      const allEnemies = enemyRows.flat();
+      const enemyIndex = Math.floor(Math.random() * allEnemies.length);
+      const enemy = allEnemies[enemyIndex];
+      enemyBulletController.shoot(enemy.getPosition().x + enemy.width / 2 - 2, enemy.getPosition().y, -3);
+    }
   }
 
   function updateVelocityAndDirection() {
@@ -65,9 +98,9 @@ const createEnemyController = (canvas) => {
   (function createEnemies() {
     enemyMap.forEach((row, rowIndex) => {
       enemyRows[rowIndex] = [];
-      row.forEach((enemyNubmer, enemyIndex) => {
-        if (enemyNubmer > 0) {
-          enemyRows[rowIndex].push(createEnemy(enemyIndex * 50, rowIndex * 35, enemyNubmer));
+      row.forEach((enemyNumber, enemyIndex) => {
+        if (enemyNumber > 0) {
+          enemyRows[rowIndex].push(createEnemy(enemyIndex * 50, rowIndex * 35, enemyNumber));
         }
       });
     });

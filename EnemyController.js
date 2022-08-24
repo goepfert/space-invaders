@@ -1,6 +1,7 @@
 import { createEnemy } from './Enemy.js';
+import MovingDirection from './MovingDirection.js';
 
-const createEnemyController = (ctx) => {
+const createEnemyController = (canvas) => {
   const enemyMap = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -11,13 +12,57 @@ const createEnemyController = (ctx) => {
   ];
   let enemyRows = [];
 
-  createEnemies();
+  let currentDirection = MovingDirection.right;
+  let xVelocity = 0;
+  let yVelocity = 0;
+  const defaultXVelocity = 1;
+  const defaultYVelocity = 1;
+  const moveDownTimerDefault = 200;
+  let moveDownTimer = moveDownTimerDefault;
 
-  function draw() {
+  function draw(ctx) {
+    updateVelocityAndDirection();
     drawEnemies(ctx);
   }
 
-  function createEnemies() {
+  function updateVelocityAndDirection() {
+    // Do it only for ine row
+    const row = enemyRows[0];
+    switch (currentDirection) {
+      case MovingDirection.right:
+        xVelocity = defaultXVelocity;
+        yVelocity = 0;
+        const rightMostEnemy = row[row.length - 1];
+        if (rightMostEnemy.getPosition().x + rightMostEnemy.width >= canvas.width) {
+          currentDirection = MovingDirection.downLeft;
+        }
+        break;
+      case MovingDirection.downLeft:
+        xVelocity = 0;
+        yVelocity = defaultYVelocity;
+        setTimeout(() => {
+          currentDirection = MovingDirection.left;
+        }, moveDownTimer);
+        break;
+      case MovingDirection.left:
+        xVelocity = -defaultXVelocity;
+        yVelocity = 0;
+        const leftMostEnemy = row[0];
+        if (leftMostEnemy.getPosition().x <= 0) {
+          currentDirection = MovingDirection.downRight;
+        }
+        break;
+      case MovingDirection.downRight:
+        xVelocity = 0;
+        yVelocity = defaultYVelocity;
+        setTimeout(() => {
+          currentDirection = MovingDirection.right;
+        }, moveDownTimer);
+        break;
+    }
+  }
+
+  (function createEnemies() {
     enemyMap.forEach((row, rowIndex) => {
       enemyRows[rowIndex] = [];
       row.forEach((enemyNubmer, enemyIndex) => {
@@ -26,10 +71,11 @@ const createEnemyController = (ctx) => {
         }
       });
     });
-  }
+  })();
 
   function drawEnemies(ctx) {
     enemyRows.flat().forEach((enemy) => {
+      enemy.move(xVelocity, yVelocity);
       enemy.draw(ctx);
     });
   }

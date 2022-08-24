@@ -21,10 +21,23 @@ const createEnemy = (x, y, imagenumber) => {
     };
   }
 
+  // same as in bullet ...
+  function collideWith(sprite) {
+    const spriteX = sprite.getPosition().x;
+    const spriteY = sprite.getPosition().y;
+
+    if (x + width > spriteX && x < spriteX + sprite.width && y + height > spriteY && y < spriteY + sprite.height) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return {
     draw,
     move,
     getPosition,
+    collideWith,
     width,
     height,
   };

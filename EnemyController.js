@@ -113,8 +113,16 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
     });
   }
 
+  function collideWith(sprite) {
+    return enemyRows.flat().some((enemy) => enemy.collideWith(sprite));
+  }
+
   return {
     draw,
+    collideWith,
+    getNumeberOfEnemies: () => {
+      return enemyRows.flat().length;
+    },
   };
 };
 

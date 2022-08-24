@@ -18,12 +18,52 @@ const enemyBulletCtrl = createBulletController(canvas, 4, 'white', false);
 const enemyCtrl = createEnemyController(canvas, enemyBulletCtrl, playerBulletCtrl);
 const player = createPlayer(canvas, 3, playerBulletCtrl);
 
+let isGameOver = false;
+let didWin = false;
+let gameID = 0;
+
 function game() {
+  checkGameOver();
   ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-  enemyCtrl.draw(ctx);
-  player.draw(ctx);
-  playerBulletCtrl.draw(ctx);
-  enemyBulletCtrl.draw(ctx);
+  displayGameOver();
+  if (!isGameOver) {
+    enemyCtrl.draw(ctx);
+    player.draw(ctx);
+    playerBulletCtrl.draw(ctx);
+    enemyBulletCtrl.draw(ctx);
+  } else {
+    clearInterval(gameID);
+  }
 }
 
-setInterval(game, 12);
+function displayGameOver() {
+  if (isGameOver) {
+    let text = didWin ? 'You Win' : 'Game Over';
+    let textOffset = didWin ? 3.5 : 5;
+
+    ctx.fillStyle = 'white';
+    ctx.font = '70px Arial';
+    ctx.fillText(text, canvas.width / textOffset, canvas.height / 2);
+  }
+}
+
+function checkGameOver() {
+  if (isGameOver) {
+    return;
+  }
+
+  if (enemyBulletCtrl.collideWith(player)) {
+    isGameOver = true;
+  }
+
+  if (enemyCtrl.collideWith(player)) {
+    isGameOver = true;
+  }
+
+  if (enemyCtrl.getNumeberOfEnemies() === 0) {
+    isGameOver = true;
+    didWin = true;
+  }
+}
+
+gameID = setInterval(game, 12);

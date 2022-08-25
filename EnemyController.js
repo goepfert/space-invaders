@@ -120,7 +120,7 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
   return {
     draw,
     collideWith,
-    getNumeberOfEnemies: () => {
+    getNumberOfEnemies: () => {
       return enemyRows.flat().length;
     },
   };

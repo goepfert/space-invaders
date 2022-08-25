@@ -1,6 +1,6 @@
 const createPlayer = (canvas, xVelocity, bulletController) => {
   const width = 50;
-  const height = 48;
+  const height = 60;
 
   let x = canvas.width / 2 - width / 2;
   let y = canvas.height - 75;
@@ -18,7 +18,7 @@ const createPlayer = (canvas, xVelocity, bulletController) => {
   function draw(ctx) {
     move();
     if (shootPressed) {
-      bulletController.shoot(x + width / 2, y, 10, 7);
+      bulletController.shoot(x + width / 2, y, 8, 12);
     }
     ctx.drawImage(image, x, y, width, height);
   }

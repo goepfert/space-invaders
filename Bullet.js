@@ -19,6 +19,7 @@ const createBullet = (canvas, x, y, velocity, bulletColor) => {
     const spriteY = sprite.getPosition().y;
 
     if (x + width > spriteX && x < spriteX + sprite.width && y + height > spriteY && y < spriteY + sprite.height) {
+      sprite.hit();
       return true;
     } else {
       return false;

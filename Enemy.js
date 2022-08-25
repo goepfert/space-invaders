@@ -1,6 +1,7 @@
 const createEnemy = (x, y, imagenumber) => {
   const width = 44;
   const height = 32;
+  let hitCounter = imagenumber;
 
   let image = new Image();
   image.src = `images/enemy${imagenumber}.png`;
@@ -33,6 +34,18 @@ const createEnemy = (x, y, imagenumber) => {
     }
   }
 
+  function hit() {
+    hitCounter--;
+  }
+
+  function isKilled() {
+    if (hitCounter <= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return {
     draw,
     move,
@@ -40,6 +53,8 @@ const createEnemy = (x, y, imagenumber) => {
     collideWith,
     width,
     height,
+    hit,
+    isKilled,
   };
 };
 

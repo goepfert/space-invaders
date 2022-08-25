@@ -18,7 +18,7 @@ const createPlayer = (canvas, xVelocity, bulletController) => {
   function draw(ctx) {
     move();
     if (shootPressed) {
-      bulletController.shoot(x + width / 2, y, 8, 12);
+      bulletController.shoot(x + width / 2, y, 8, 10);
     }
     ctx.drawImage(image, x, y, width, height);
   }
@@ -59,11 +59,14 @@ const createPlayer = (canvas, xVelocity, bulletController) => {
     };
   }
 
+  function hit() {}
+
   return {
     draw,
     getPosition,
     width,
     height,
+    hit,
   };
 };
 

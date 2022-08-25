@@ -20,7 +20,7 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
   const moveDownTimerDefault = 200;
   let moveDownTimer = moveDownTimerDefault;
 
-  const fireBulletTimerDefault = 100;
+  const fireBulletTimerDefault = 50;
   let fireBulletTimer = fireBulletTimerDefault;
 
   const enemyDeathSound = new Audio('sounds/enemy-death.wav');
@@ -39,7 +39,9 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
         if (playerBulletController.collideWith(enemy)) {
           enemyDeathSound.currentTime = 0;
           enemyDeathSound.play();
-          enemyRow.splice(enemyIndex, 1);
+          if (enemy.isKilled()) {
+            enemyRow.splice(enemyIndex, 1);
+          }
         }
       });
     });

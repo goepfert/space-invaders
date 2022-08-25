@@ -19,8 +19,8 @@ const ctx = canvas.getContext('2d');
 const backgroundImg = new Image();
 backgroundImg.src = 'images/space.png';
 
-const playerBulletCtrl = createBulletController(canvas, 4, 'red', true);
-const enemyBulletCtrl = createBulletController(canvas, 4, 'white', false);
+const playerBulletCtrl = createBulletController(canvas, 4, 'lime', true);
+const enemyBulletCtrl = createBulletController(canvas, 6, 'deeppink', false);
 const enemyCtrl = createEnemyController(canvas, enemyBulletCtrl, playerBulletCtrl);
 const player = createPlayer(canvas, 3, playerBulletCtrl);
 
@@ -47,7 +47,7 @@ function game() {
 
 function displayGameOver() {
   if (isGameOver) {
-    let text = didWin ? 'You Win' : 'Game Over';
+    let text = didWin ? 'You Won' : 'Game Over';
     let textOffset = didWin ? 3.5 : 5;
 
     ctx.fillStyle = 'white';
@@ -71,7 +71,7 @@ function checkGameOver() {
     isGameOver = true;
   }
 
-  // Check if enemies gone too far
+  // Check if enemies gone too far --> not neccessary
 
   // Any enemies left?
   if (enemyCtrl.getNumberOfEnemies() === 0) {
@@ -80,4 +80,4 @@ function checkGameOver() {
   }
 }
 
-gameID = setInterval(game, 12);
+gameID = setInterval(game, 10);

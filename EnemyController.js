@@ -15,6 +15,9 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
   ];
   let enemyRows = [];
 
+  /**
+   * enum
+   */
   const movingDirection = {
     left: 'left',
     right: 'right',

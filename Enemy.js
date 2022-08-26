@@ -22,7 +22,7 @@ const createEnemy = (x, y, imagenumber) => {
     };
   }
 
-  // same as in bullet ...
+  // same as in bullet ... :(
   function collideWith(sprite) {
     const spriteX = sprite.getPosition().x;
     const spriteY = sprite.getPosition().y;

@@ -28,12 +28,12 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
 
   let xVelocity = 0;
   let yVelocity = 0;
-  const defaultXVelocity = 1;
+  const defaultXVelocity = 1.5;
   const defaultYVelocity = 1;
   const moveDownTimerDefault = 200;
   let moveDownTimer = moveDownTimerDefault;
 
-  const fireBulletTimerDefault = 50;
+  const fireBulletTimerDefault = 30;
   let fireBulletTimer = fireBulletTimerDefault;
 
   const enemyDeathSound = new Audio('sounds/enemy-death.wav');
@@ -73,40 +73,49 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
     }
   }
 
+  /**
+   * Looks kinda ugly ... need to rethink
+   */
   function move() {
-    // Do it only for one row ... this is not correct ...
-    const row = enemyRows[0];
-    switch (currentDirection) {
-      case movingDirection.right:
-        xVelocity = defaultXVelocity;
-        yVelocity = 0;
-        const rightMostEnemy = row[row.length - 1];
-        if (rightMostEnemy.getPosition().x + rightMostEnemy.width >= canvas.width) {
-          currentDirection = movingDirection.downLeft;
-        }
-        break;
-      case movingDirection.downLeft:
-        xVelocity = 0;
-        yVelocity = defaultYVelocity;
-        setTimeout(() => {
-          currentDirection = movingDirection.left;
-        }, moveDownTimer);
-        break;
-      case movingDirection.left:
-        xVelocity = -defaultXVelocity;
-        yVelocity = 0;
-        const leftMostEnemy = row[0];
-        if (leftMostEnemy.getPosition().x <= 0) {
-          currentDirection = movingDirection.downRight;
-        }
-        break;
-      case movingDirection.downRight:
-        xVelocity = 0;
-        yVelocity = defaultYVelocity;
-        setTimeout(() => {
-          currentDirection = movingDirection.right;
-        }, moveDownTimer);
-        break;
+    let breakloop = false;
+    for (let rowIdx = 0; rowIdx < enemyRows.length && !breakloop; rowIdx++) {
+      let row = enemyRows[rowIdx];
+      switch (currentDirection) {
+        case movingDirection.right:
+          xVelocity = defaultXVelocity;
+          yVelocity = 0;
+          const rightMostEnemy = row[row.length - 1];
+          if (rightMostEnemy.getPosition().x + rightMostEnemy.width >= canvas.width) {
+            currentDirection = movingDirection.downLeft;
+            breakloop = true;
+          }
+          break;
+        case movingDirection.downLeft:
+          xVelocity = 0;
+          yVelocity = defaultYVelocity;
+          setTimeout(() => {
+            currentDirection = movingDirection.left;
+          }, moveDownTimer);
+          breakloop = true;
+          break;
+        case movingDirection.left:
+          xVelocity = -defaultXVelocity;
+          yVelocity = 0;
+          const leftMostEnemy = row[0];
+          if (leftMostEnemy.getPosition().x <= 0) {
+            currentDirection = movingDirection.downRight;
+            breakloop = true;
+          }
+          break;
+        case movingDirection.downRight:
+          xVelocity = 0;
+          yVelocity = defaultYVelocity;
+          setTimeout(() => {
+            currentDirection = movingDirection.right;
+          }, moveDownTimer);
+          breakloop = true;
+          break;
+      }
     }
   }
 

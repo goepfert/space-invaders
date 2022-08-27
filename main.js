@@ -3,13 +3,14 @@
  *
  * author: Thomas Goepfert
  *
- * heavily inspired by https://www.youtube.com/watch?v=qCBiKJbLcFI&t=454s and others
+ * heavily inspired by https://www.youtube.com/watch?v=qCBiKJbLcFI&t=454s and many others!!!
  */
 
 import { createEnemyController } from './EnemyController.js';
 import { createBulletController } from './BulletController.js';
 import { createPlayer } from './Player.js';
 
+const comment = document.getElementById('comment');
 const canvas = document.getElementById('game');
 canvas.width = 600;
 canvas.height = 600;
@@ -24,9 +25,9 @@ let enemyBulletCtrl;
 let enemyCtrl;
 let player;
 
-let isPaused = true;
-let isGameOver = false;
-let didWin = false;
+let isPaused;
+let isGameOver;
+let didWin;
 let gameID = 0;
 
 /**
@@ -44,7 +45,7 @@ async function gameLoop() {
   } else {
     clearInterval(gameID);
     await sleep(1000);
-
+    comment.classList.remove('invisible');
     window.addEventListener('keydown', gameStart);
   }
 }
@@ -55,7 +56,7 @@ function sleep(ms) {
 
 function displayGameOver() {
   if (isGameOver) {
-    let text = didWin ? 'You Won' : 'Game Over';
+    let text = didWin ? 'You Win!' : 'Game Over';
     let textOffset = didWin ? 3.5 : 5;
 
     ctx.fillStyle = 'white';
@@ -90,14 +91,18 @@ function checkGameOver() {
 
 function init() {
   playerBulletCtrl = createBulletController(canvas, 4, 'lime', true);
-  enemyBulletCtrl = createBulletController(canvas, 6, 'deeppink', false);
+  enemyBulletCtrl = createBulletController(canvas, 10, 'deeppink', false);
   enemyCtrl = createEnemyController(canvas, enemyBulletCtrl, playerBulletCtrl);
   player = createPlayer(canvas, 3, playerBulletCtrl);
+  isPaused = false;
+  isGameOver = false;
+  didWin = false;
 }
 
 init();
 
 window.onload = () => {
+  isPaused = true;
   gameLoop();
   window.addEventListener('keydown', gameStart);
 };
@@ -105,8 +110,7 @@ window.onload = () => {
 function gameStart(event) {
   if (event.code == 'Space') {
     if (isPaused || isGameOver) {
-      isPaused = false;
-      isGameOver = false;
+      comment.classList.add('invisible');
       window.removeEventListener('keydown', gameStart);
       init();
       gameID = setInterval(gameLoop, 10);

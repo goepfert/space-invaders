@@ -1,7 +1,10 @@
 import { createEnemy } from './Enemy.js';
-import MovingDirection from './MovingDirection.js';
 
 const createEnemyController = (canvas, enemyBulletController, playerBulletController) => {
+  /**
+   * Initial Mapping of Enemy Image and Position
+   * Also used as hit counter (3 -> must be hit 3 times for killing)
+   */
   const enemyMap = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -12,7 +15,17 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
   ];
   let enemyRows = [];
 
-  let currentDirection = MovingDirection.right;
+  /**
+   * enum
+   */
+  const movingDirection = {
+    left: 'left',
+    right: 'right',
+    downLeft: 'downLeft',
+    downRight: 'downRight',
+  };
+  let currentDirection = movingDirection.right;
+
   let xVelocity = 0;
   let yVelocity = 0;
   const defaultXVelocity = 1;
@@ -27,7 +40,7 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
   enemyDeathSound.volume = 0.1;
 
   function draw(ctx) {
-    updateVelocityAndDirection();
+    move();
     collisionDetection();
     drawEnemies(ctx);
     fireBullet();
@@ -60,38 +73,38 @@ const createEnemyController = (canvas, enemyBulletController, playerBulletContro
     }
   }
 
-  function updateVelocityAndDirection() {
-    // Do it only for ine row
+  function move() {
+    // Do it only for one row ... this is not correct ...
     const row = enemyRows[0];
     switch (currentDirection) {
-      case MovingDirection.right:
+      case movingDirection.right:
         xVelocity = defaultXVelocity;
         yVelocity = 0;
         const rightMostEnemy = row[row.length - 1];
         if (rightMostEnemy.getPosition().x + rightMostEnemy.width >= canvas.width) {
-          currentDirection = MovingDirection.downLeft;
+          currentDirection = movingDirection.downLeft;
         }
         break;
-      case MovingDirection.downLeft:
+      case movingDirection.downLeft:
         xVelocity = 0;
         yVelocity = defaultYVelocity;
         setTimeout(() => {
-          currentDirection = MovingDirection.left;
+          currentDirection = movingDirection.left;
         }, moveDownTimer);
         break;
-      case MovingDirection.left:
+      case movingDirection.left:
         xVelocity = -defaultXVelocity;
         yVelocity = 0;
         const leftMostEnemy = row[0];
         if (leftMostEnemy.getPosition().x <= 0) {
-          currentDirection = MovingDirection.downRight;
+          currentDirection = movingDirection.downRight;
         }
         break;
-      case MovingDirection.downRight:
+      case movingDirection.downRight:
         xVelocity = 0;
         yVelocity = defaultYVelocity;
         setTimeout(() => {
-          currentDirection = MovingDirection.right;
+          currentDirection = movingDirection.right;
         }, moveDownTimer);
         break;
     }

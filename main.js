@@ -3,7 +3,7 @@
  *
  * author: Thomas Goepfert
  *
- * heavily inspired by https://www.youtube.com/watch?v=qCBiKJbLcFI&t=454s
+ * heavily inspired by https://www.youtube.com/watch?v=qCBiKJbLcFI&t=454s and others
  */
 
 import { createEnemyController } from './EnemyController.js';
@@ -79,7 +79,7 @@ function checkGameOver() {
     isGameOver = true;
   }
 
-  // Check if enemies gone too far --> not neccessary
+  // Check if enemies gone too far --> not necessary
 
   // Any enemies left?
   if (enemyCtrl.getNumberOfEnemies() === 0) {

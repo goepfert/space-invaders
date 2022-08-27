@@ -19,11 +19,12 @@ const ctx = canvas.getContext('2d');
 const backgroundImg = new Image();
 backgroundImg.src = 'images/space.png';
 
-const playerBulletCtrl = createBulletController(canvas, 4, 'lime', true);
-const enemyBulletCtrl = createBulletController(canvas, 6, 'deeppink', false);
-const enemyCtrl = createEnemyController(canvas, enemyBulletCtrl, playerBulletCtrl);
-const player = createPlayer(canvas, 3, playerBulletCtrl);
+let playerBulletCtrl;
+let enemyBulletCtrl;
+let enemyCtrl;
+let player;
 
+let isPaused = true;
 let isGameOver = false;
 let didWin = false;
 let gameID = 0;
@@ -31,7 +32,7 @@ let gameID = 0;
 /**
  * The game loop
  */
-function game() {
+async function gameLoop() {
   checkGameOver();
   ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
   displayGameOver();
@@ -42,7 +43,14 @@ function game() {
     enemyBulletCtrl.draw(ctx);
   } else {
     clearInterval(gameID);
+    await sleep(1000);
+
+    window.addEventListener('keydown', gameStart);
   }
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function displayGameOver() {
@@ -80,4 +88,28 @@ function checkGameOver() {
   }
 }
 
-gameID = setInterval(game, 10);
+function init() {
+  playerBulletCtrl = createBulletController(canvas, 4, 'lime', true);
+  enemyBulletCtrl = createBulletController(canvas, 6, 'deeppink', false);
+  enemyCtrl = createEnemyController(canvas, enemyBulletCtrl, playerBulletCtrl);
+  player = createPlayer(canvas, 3, playerBulletCtrl);
+}
+
+init();
+
+window.onload = () => {
+  gameLoop();
+  window.addEventListener('keydown', gameStart);
+};
+
+function gameStart(event) {
+  if (event.code == 'Space') {
+    if (isPaused || isGameOver) {
+      isPaused = false;
+      isGameOver = false;
+      window.removeEventListener('keydown', gameStart);
+      init();
+      gameID = setInterval(gameLoop, 10);
+    }
+  }
+}

@@ -2,4 +2,4 @@ Plain javascript browser game.
 
 Demo: https://goepfert.github.io/space-invaders/
 
-![](./images/demo.png)
+![](https://github.com/goepfert/space-invaders/blob/master/images/demo.png?raw=true)
